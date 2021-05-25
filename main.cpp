@@ -18,9 +18,11 @@ class utils{
 class files{
     public:
     string readFiletoString(string filename){
+        //it reads the file and returns it as a sting
 
     }
     void findVariables(string Filetext){
+
 
     }
 };
