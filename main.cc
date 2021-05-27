@@ -52,7 +52,7 @@ class logic{
         void replaceNewVars();//now replacese the old vars with the new stuff 
 
 
-        string autoSudgestVars (string var); // sudgestss a suitable name for the varibvle and returns it, and catcches it to prevent repetation
+        string autoSuggestVars (string var); // suggest a suitable name for the varibvle and returns it, and catcches it to prevent repetation
 }logic;
 
 class files : private logic{
@@ -102,7 +102,7 @@ void utils::getNumberOfCoppies(){
 void logic::findVariables(){
 
 }
-string logic::autoSudgestVars(string var){
+string logic::autoSuggestVars(string var){
 
 }
 void logic::replaceNewVars(){
