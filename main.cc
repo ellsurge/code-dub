@@ -2,85 +2,116 @@
 
 using namespace std;
 
-class utils{
-    public:
-        string getLocalFiles(){
-            //its to get all files in the directory  that it is run
-            //then asks you to choose the file number 
-            // then returns the file name
-        }
-        int getNumberOfCoppies(){
-            //its to ask the user the number of coppies he waint of the code
-        }
-        void getNames(string *name_list){
-            //assigns the names it gests to the name array
-        }
+//******************************************DONT WORRY ABOUT ANYTHING HERE, ITS JUST DATASTRUCTURES AND CONSTRUCTORS****
 
+
+//---------my defined data types----------
+typedef unsigned long int cnt;
+typedef long int nat;
+
+//----------------enums------------
+enum log_t {error, success, info,check};
+//---------------------------------
+
+
+//---------this is the data structure of the code  named code-----------
+struct code 
+{
+    /* data */
+    string name; //name of the file
+    string content; //contents of the file
+    int coppies; //number of coppies
+    cnt size;  //size of file
     
-};
-class logic{
-    private:
-        string keywords[200]; // we need to fill this to the max;
+    struct{ // this contains information ablut the variables
+        string* name; //names of vaiables wouldd be containedd here
+        nat* location; //same with location of the variables in the file  ---p.s is a multidimentinal array
+        string* catched; // this would store all the generated varables
 
+    }var;
 
-        void findVariables(string Filetext, string* var_name, int* var_adr){
-            //runs a search through the string across all the standard varraible keywords we set;
+}code;
+//-----------------------------------------------------------------
 
-            //and then retruns the values to *var_name and where it wasa found to *var_adr
-
-        }
-        void replaceNewVars(string &Filetext, string* var_name, int* var_adr)
-        {
-            //now replacese the old vars with the new stuff 
-        }
+class utils{
 
     public:
-        string autoSudgestname (string var, string* var_catch){
-            // sudgestss a suitable name for the varibvle and returns it, and catcches it to prevent repetation
+        void getLocalFiles();//its to get all files in the directory  that it is run //then asks you to choose the file number // then returns the file name
 
-        }
+        void getNumberOfCoppies();//its to ask the user the number of coppies he waint of the code
 
-};
+        void log(log_t type, string message); //its to log current progress
+}utils;
+
+class logic{
+    public:
+        string* keywords; // where we input new keywords;
+        logic();
+        void findVariables();//runs a search through the string across all the standard varraible keywords we set; and then retruns the values to *var_name and where it wasa found to *var_adr
+
+        void replaceNewVars();//now replacese the old vars with the new stuff 
+
+
+        string autoSudgestVars (string var); // sudgestss a suitable name for the varibvle and returns it, and catcches it to prevent repetation
+}logic;
+
 class files : private logic{
     public:
-        string readFiletoString(string filename){
-            //it reads the file and returns it as a sting
+        void readFiletoString(); //it reads the file and returns it as a sting
 
-        }
-        bool writeToNewFile(string Filetext){
-            //wtrites it back to a new file
+        bool writeToNewFile();//wtrites it back to a new file
+}files;
 
-        }
 
-    
-};
-
+//*********************************************************************************
 int main(){
-    // class initializations--------------------
-    utils utils;
-    files files;
-    logic logic;
-    
-    //setting upp constants ------------
-    const string filename = utils.getLocalFiles();
-    const string fileContent= files.readFiletoString(filename);
 
-    const int NOC = utils.getNumberOfCoppies();
-    const unsigned long int file_size = fileContent.length(); 
-    
-    //inintializing the variable arrays -----------------------------------
-    string name_list[NOC];
-    string var_name[file_size];  //where the variable names would  be stored
-    int var_adrr[file_size][file_size]; //where the location of the variable in the file would be stored
-    string var_catch[file_size*NOC]; //array where all the generated names would be cathched
+    // ------------
+    utils.getLocalFiles();
+    files.readFiletoString();
+    utils.getNumberOfCoppies(); 
+    for (cnt i = 0; i < code.coppies; i++)
+    {
+        logic.findVariables();
+        logic.replaceNewVars();
+        if(files.writeToNewFile()){
+            //success statement;
+        }else{
+            //error statement
+        }
+    }
+}
 
+//--------------START BUILDING HERE---------------
 
-    //
-    /* code starts here
+//-------core-----------
+logic::logic(){
+    string str_var[100] ={"int","string", "long", "double"}; //were to complete this list 
+    keywords = str_var;
 
+}
+void utils::getLocalFiles(){
 
+}
+void files::readFiletoString(){
 
+}
+void utils::getNumberOfCoppies(){
 
-    */
+}
+void logic::findVariables(){
+
+}
+string logic::autoSudgestVars(string var){
+
+}
+void logic::replaceNewVars(){
+
+}
+bool files::writeToNewFile(){
+
+}
+//--------------------------
+void utils::log(log_t type, string message){
 
 }
