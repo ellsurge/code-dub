@@ -10,7 +10,7 @@ typedef unsigned long int cnt;
 typedef long int nat;
 
 //----------------enums------------
-enum log_t {error, success, info,check};
+enum log_t {error,check, success, info};
 //---------------------------------
 
 
@@ -70,6 +70,11 @@ int main(){
     utils.getLocalFiles();
     files.readFiletoString();
     utils.getNumberOfCoppies(); 
+
+    // utils.log(error, "failed try again");
+    // utils.log(info, "creating file please wait");
+    // utils.log(success, "file created sucessfullyy");
+    // utils.log(check, "");
     for (cnt i = 0; i < code.coppies; i++)
     {
         logic.findVariables();
@@ -114,5 +119,20 @@ bool files::writeToNewFile(){
 }
 //--------------------------
 void utils::log(log_t type, string message){
+    if (message != ""){
+        if(type == info){
+            cout<<"\n-------------------------\nLOG::"<<message<<"\n-------------------------"<<endl;
+        }else if(type == error ){
+            cout<<"#########################\nERROR::"<<message<<"\n#########################"<<endl;
+        }else if(type == success){
+            cout<<"************************\nSUCCESS::"<<message<<"\n*************************"<<endl;
+        }else if(type == check) {
+        cout<<"\n~~~~~~~~~~~~~~~~~~~~~~***"<<message<<"****~~~~~~~~~~~~~~~~~~~~~~~"<<endl;
+
+        }
+
+    }else{
+        cout<<"\n~~~~~~~~~~~~~~~~~~~~~~***here****~~~~~~~~~~~~~~~~~~~~~~~\n";
+    }
 
 }
