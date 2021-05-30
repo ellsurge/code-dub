@@ -162,6 +162,7 @@ void files::readFiletoString(){
             //wait
         }
         log(success, "file read succesfully");
+        cout<<code.content;
 
     }else ///error handling 
     {
