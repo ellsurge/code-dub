@@ -101,6 +101,7 @@ void utils::getNumberOfCoppies(){
 }
 void logic::findVariables(){
 
+
 }
 string logic::autoSudgestVars(string var){
 
