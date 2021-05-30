@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>  //to use string streamm to fix a bug i was getting getlocalfiles
 #include <filesystem> // for file sysyem stuff
+#include <fstream> //for reading and writing the file
 
 using namespace std;
 namespace fs = filesystem;
@@ -48,7 +49,7 @@ class utils{
         void log(log_t type, string message); //its to log current progress
 }utils;
 
-class logic{
+class logic :public utils{
     public:
         string* keywords; // where we input new keywords;
         logic();
@@ -60,7 +61,7 @@ class logic{
         string autoSuggestVars (string var); // suggest a suitable name for the varibvle and returns it, and catcches it to prevent repetation
 }logic;
 
-class files : private logic{
+class files : private logic {
     public:
         void readFiletoString(); //it reads the file and returns it as a sting
 
@@ -112,6 +113,7 @@ void utils::getLocalFiles(){
     if(filearr  == 0){ //error check
         log(error, "did not assign memory");
     }else{
+        
 
         for(auto & fd : fs::directory_iterator(path)){ //loops throgh the dir
 
@@ -134,7 +136,35 @@ void utils::getLocalFiles(){
     }
 }
 void files::readFiletoString(){
-    // log(info, "loading file, please wait");
+    int count=0;
+    string temp_file_dump;
+    log(info, "loading file, please wait");
+    t_lf:
+    count++;
+    ifstream thefile(code.name);
+    if(thefile.is_open()){
+        log(success, "file loaded successfully");
+        log(info, "attepting to read file");
+        while(! thefile.eof()){
+            getline(thefile, temp_file_dump);
+            code.content += temp_file_dump+"\n";
+
+            //wait
+        }
+        log(success, "file read succesfully");
+
+    }else ///error handling 
+    {
+        string message = "failed to load file, trying again";
+        log(error, message);
+        if(count <2){goto t_lf;}else
+        {
+            log(error, "sorry could not load file, try another file maybe");
+            getLocalFiles();
+            readFiletoString();
+        }
+    }
+
 
 
 
