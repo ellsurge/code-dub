@@ -1,6 +1,9 @@
 #include <iostream>
+#include <sstream>  //to use string streamm to fix a bug i was getting getlocalfiles
+#include <filesystem> // for file sysyem stuff
 
 using namespace std;
+namespace fs = filesystem;
 
 //******************************************DONT WORRY ABOUT ANYTHING HERE, ITS JUST DATASTRUCTURES AND CONSTRUCTORS****
 
@@ -40,6 +43,8 @@ class utils{
 
         void getNumberOfCoppies();//its to ask the user the number of coppies he waint of the code
 
+        void input(int& out);
+       
         void log(log_t type, string message); //its to log current progress
 }utils;
 
@@ -92,12 +97,68 @@ logic::logic(){
 
 }
 void utils::getLocalFiles(){
+    string *filearr;      // a pointer to where the flies would be stored
+    string path = "./";  //the path is set to current directory
+    int i,maxx = 0,count = 0;
 
+    cout<<"Welcome, please select the file you want to dub"<<endl;
+
+    for(auto &nn :fs::directory_iterator(path)){  //this gets the number of files in the dir and stores it to max
+         maxx +=1;
+     }
+
+
+    filearr = new (nothrow) string[maxx+1]; // creates a new array with the size of the dir
+    if(filearr  == 0){ //error check
+        log(error, "did not assign memory");
+    }else{
+
+        for(auto & fd : fs::directory_iterator(path)){ //loops throgh the dir
+
+            filearr[count] = fd.path().string();
+            cout<<count+1<<": "<<fd.path()<<endl;
+            count += 1;
+        }
+        stage_1:
+        input(i);
+        if(i <= maxx and i>0 ){
+
+            code.name = filearr[i-1]; //sets value of file name
+            string message = "you've selected: "+filearr[i-1];
+            log(info, message);  //logs out the current progress
+
+        }else {
+            log(error, "you selected an invalid number try again");
+            goto stage_1;
+        }
+    }
 }
 void files::readFiletoString(){
+    // log(info, "loading file, please wait");
+
+
 
 }
 void utils::getNumberOfCoppies(){
+    int num;
+    cout<<"\n Enter number of coppies ";
+    input_2:
+    input(num);
+    if(num <1){
+        log(error, "number is too low, try again");
+        goto input_2;
+    }else{
+        log(info, "registering the number of copies");
+        int et=0;
+        t_reg_coppies:
+        et +=1;
+        if(code.coppies = num){
+            log(success, "number of copppies registerd succesfully");
+        }else{
+            log(error, "entry failed  trying again");
+            if(et <5){goto t_reg_coppies;}
+        }
+    }
 
 }
 void logic::findVariables(){
@@ -114,6 +175,8 @@ bool files::writeToNewFile(){
 
 }
 //--------------------------
+
+
 void utils::log(log_t type, string message){
     if (message != ""){
         if(type == info){
@@ -131,4 +194,10 @@ void utils::log(log_t type, string message){
         cout<<"\n~~~~~~~~~~~~~~~~~~~~~~***here****~~~~~~~~~~~~~~~~~~~~~~~\n";
     }
 
+}
+void utils::input(int &out){
+    string in;
+    cout<<"::";
+    getline(cin, in);
+    stringstream(in)>>out;
 }
