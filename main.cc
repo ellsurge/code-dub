@@ -71,10 +71,6 @@ int main(){
     files.readFiletoString();
     utils.getNumberOfCoppies(); 
 
-    // utils.log(error, "failed try again");
-    // utils.log(info, "creating file please wait");
-    // utils.log(success, "file created sucessfullyy");
-    // utils.log(check, "");
     for (cnt i = 0; i < code.coppies; i++)
     {
         logic.findVariables();
