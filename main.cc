@@ -2,7 +2,7 @@
 /////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 /////////*NOTE :  COMPILE USING THE CPP11 STANDARD*////////
-//////////////////g++ main -std=c++11/////////////////////
+//////////////////g++ -o test.exe main.cc -std=c++11/////////////////////
 /////////////////////////////////////////////////////////
 
 
@@ -14,6 +14,7 @@
 #include <fstream> //for reading and writing the file
 
 using namespace std;
+
 namespace fs = filesystem;
 
 //******************************************DONT WORRY ABOUT ANYTHING HERE, ITS JUST DATASTRUCTURES AND CONSTRUCTORS****
@@ -114,7 +115,7 @@ void utils::getLocalFiles(){
 
     cout<<"Welcome, please select the file you want to dub"<<endl;
 
-    for(auto &nn :fs::directory_iterator(path)){  //this gets the number of files in the dir and stores it to max
+    for(auto &nn : fs::directory_iterator(path)){  //this gets the number of files in the dir and stores it to max
          maxx +=1;
      }
 
