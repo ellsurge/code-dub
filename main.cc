@@ -58,6 +58,8 @@ class utils{
         void input(int& out);
        
         void log(log_t type, string message); //its to log current progress
+        
+        bool is_in(char niddle, char* haystack);
 }utils;
 
 class logic :public utils{
@@ -243,4 +245,17 @@ void utils::input(int &out){
     cout<<"::";
     getline(cin, in);
     stringstream(in)>>out;
+}
+bool utils::is_in(char niddle, char* haystack){
+    bool init;
+    for(; *haystack !=0; haystack++){
+        if(niddle == *haystack ){
+            init = true;
+            break;
+        }else{
+            init =  false;
+            continue;
+        }
+    }
+    return init; 
 }
