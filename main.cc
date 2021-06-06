@@ -46,7 +46,20 @@ struct code
     }var;
 
 }code;
+
+struct lib
+{
+    char* excluded_chars;
+    char* special_chars;
+    string* keywords;
+    string* excluded_keywords;
+
+}lib;
+
 //-----------------------------------------------------------------
+class logic;
+class utils;
+class files;
 
 class utils{
 
@@ -64,15 +77,13 @@ class utils{
 
 class logic :public utils{
     public:
-        string* keywords; // where we input new keywords;
-        char* special_chars;
-        char* excluded_chars;
-        logic();
+        void set_lib();
+
         void findVariables();//runs a search through the string across all the standard varraible keywords we set; and then retruns the values to *var_name and where it wasa found to *var_adr
 
         void replaceNewVars();//now replacese the old vars with the new stuff 
 
-        string  line_spacer(string line);// makes sure each line is well spaced
+        void  line_spacer(string& line);// makes sure each line is well spaced
 
         string autoSuggestVars (string var); // suggest a suitable name for the varibvle and returns it, and catcches it to prevent repetation
 }logic;
@@ -91,6 +102,7 @@ class files : private logic {
 int main(){
 
     // ------------
+    logic.set_lib();
     utils.getLocalFiles();
     files.readFiletoString();
     utils.getNumberOfCoppies(); 
@@ -110,12 +122,19 @@ int main(){
 //--------------START BUILDING HERE---------------
 
 //-------core-----------
-logic::logic(){
-    string str_var[100] ={"int","string", "long", "double"}; //were to complete this list 
+void logic::set_lib(){
+    string keywords[100] ={"int","string", "long", "double"}; //were to complete this list 
     char special_chars [25] = {'=', '&', '*','[', ']', '{', '}',  '(', ')','!', '@', '$', '%', '^','_','+', '-', '~', '`', ':', '\'', '"',  '|', ',','?'};
 
     char excluded_chars[6] = { '#','/','.', '<', '>', '\\'};
-    keywords = str_var;
+    lib.special_chars = new  (nothrow)char(25);
+    lib.excluded_chars = excluded_chars;
+    if(!lib.special_chars){
+    }else{
+    lib.special_chars = special_chars;
+    }
+    lib.keywords = keywords;
+    
 
 }
 void utils::getLocalFiles(){
@@ -125,12 +144,14 @@ void utils::getLocalFiles(){
 
     cout<<"Welcome, please select the file you want to dub"<<endl;
 
-    for(auto &nn : fs::directory_iterator(path)){  //this gets the number of files in the dir and stores it to max
+    for(auto nn : fs::directory_iterator(path)){  //this gets the number of files in the dir and stores it to max
          maxx +=1;
      }
+     cout<<lib.special_chars;
 
 
     filearr = new (nothrow) string[maxx+1]; // creates a new array with the size of the dir
+
     if(filearr  == 0){ //error check
         log(error, "did not assign memory");
     }else{
@@ -168,8 +189,15 @@ void files::readFiletoString(){
         log(info, "attepting to read file");
         while(! thefile.eof()){
             getline(thefile, temp_file_dump);
-            line = line_spacer(temp_file_dump);
-            code.content += line+"\n";
+            string news = "int arr[5] =    {1,2,3,4,5};";
+            // if(is_in(temp_file_dump[0], lib.excluded_chars)){
+            //     line = temp_file_dump;
+            // }else{
+            line_spacer(news);
+           cout<<"**********************"<<news<<endl;
+            // cout<<temp_file_dump<<endl;
+            // }
+            code.content += temp_file_dump+"\n";
 
             //wait
         }
@@ -219,21 +247,21 @@ void logic::findVariables(){
 
 
 }
-string logic::line_spacer(string line){
+void logic::line_spacer(string& line){
 
-
+       cout<<lib.special_chars;
     for (int i = 0; i <line.length(); i++)
     {
         if( line[i] == ' ' && line[i+1] == ' ' ){
             line.erase(i, 1);
         }
 
-        if(is_in(line[i], special_chars) xor is_in(line[i+1], special_chars) && line[i] != ' ' ){ //adding spacec
+        if(is_in(line[i], lib.special_chars) xor is_in(line[i+1], lib.special_chars) && line[i] != ' ' ){ //adding spacec
             line.insert(i+1,1,' ');
         }
 
     }
-    return line;
+
 }
 string logic::autoSuggestVars(string var){
 
@@ -273,6 +301,7 @@ void utils::input(int &out){
 }
 bool utils::is_in(char niddle, char* haystack){
     bool init;
+
     for(; *haystack !=0; haystack++){
         if(niddle == *haystack ){
             init = true;
