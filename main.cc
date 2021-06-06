@@ -65,11 +65,14 @@ class utils{
 class logic :public utils{
     public:
         string* keywords; // where we input new keywords;
+        char* special_chars;
+        char* excluded_chars;
         logic();
         void findVariables();//runs a search through the string across all the standard varraible keywords we set; and then retruns the values to *var_name and where it wasa found to *var_adr
 
         void replaceNewVars();//now replacese the old vars with the new stuff 
 
+        string  line_spacer(string line);// makes sure each line is well spaced
 
         string autoSuggestVars (string var); // suggest a suitable name for the varibvle and returns it, and catcches it to prevent repetation
 }logic;
@@ -79,6 +82,8 @@ class files : private logic {
         void readFiletoString(); //it reads the file and returns it as a sting
 
         bool writeToNewFile();//wtrites it back to a new file
+
+       
 }files;
 
 
@@ -107,6 +112,9 @@ int main(){
 //-------core-----------
 logic::logic(){
     string str_var[100] ={"int","string", "long", "double"}; //were to complete this list 
+    char special_chars [25] = {'=', '&', '*','[', ']', '{', '}',  '(', ')','!', '@', '$', '%', '^','_','+', '-', '~', '`', ':', '\'', '"',  '|', ',','?'};
+
+    char excluded_chars[6] = { '#','/','.', '<', '>', '\\'};
     keywords = str_var;
 
 }
@@ -150,7 +158,7 @@ void utils::getLocalFiles(){
 }
 void files::readFiletoString(){
     int count=0;
-    string temp_file_dump;
+    string temp_file_dump, line;
     log(info, "loading file, please wait");
     t_lf:
     count++;
@@ -160,7 +168,8 @@ void files::readFiletoString(){
         log(info, "attepting to read file");
         while(! thefile.eof()){
             getline(thefile, temp_file_dump);
-            code.content += temp_file_dump+"\n";
+            line = line_spacer(temp_file_dump);
+            code.content += line+"\n";
 
             //wait
         }
@@ -209,6 +218,22 @@ void logic::findVariables(){
     log(info, "sanning file ...");
 
 
+}
+string logic::line_spacer(string line){
+
+
+    for (int i = 0; i <line.length(); i++)
+    {
+        if( line[i] == ' ' && line[i+1] == ' ' ){
+            line.erase(i, 1);
+        }
+
+        if(is_in(line[i], special_chars) xor is_in(line[i+1], special_chars) && line[i] != ' ' ){ //adding spacec
+            line.insert(i+1,1,' ');
+        }
+
+    }
+    return line;
 }
 string logic::autoSuggestVars(string var){
 
