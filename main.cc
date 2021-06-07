@@ -85,6 +85,8 @@ class logic :public utils{
 
         void  line_spacer(string& line);// makes sure each line is well spaced
 
+        char get_first_char(string line); //returns the first character in a line, ignoring any whitespace
+
         string autoSuggestVars (string var); // suggest a suitable name for the varibvle and returns it, and catcches it to prevent repetation
 }logic;
 
@@ -126,10 +128,11 @@ void logic::set_lib(){
     string keywords[100] ={"int","string", "long", "double"}; //were to complete this list 
     char special_chars [28] = {'=', '&', '*','[', ']', '{', '}',  '(', ')',';','<', '>','!', '@', '$', '%', '^','_','+', '-', '~', '`', ':', '\'', '"',  '|', ',','?'};
 
-    char excluded_chars[4] = { '#','/','.',  '\\'};
+    char excluded_chars[4] = { '#','/','.','\\'};
     lib.special_chars = new  (nothrow)char(25);
     lib.excluded_chars = excluded_chars;
     if(!lib.special_chars){
+        log(error, "could  not assign memory to char lists");
     }else{
     lib.special_chars = special_chars;
     }
@@ -191,12 +194,13 @@ void files::readFiletoString(){
         while(! thefile.eof()){
             getline(thefile, temp_file_dump);
 
-            if(is_in(temp_file_dump[0], lib.excluded_chars)){
+            if(is_in(get_first_char(temp_file_dump), lib.excluded_chars)){
+               
 
             }else{
+
             line_spacer(temp_file_dump);
             }
-
             code.content += temp_file_dump+"\n";
         }
         log(success, "file read succesfully");
@@ -239,6 +243,22 @@ void utils::getNumberOfCoppies(){
         }
     }
 
+}
+char logic::get_first_char(string line){
+
+    char output = line[0];
+    for (int i = 0; i < line.length(); i++)
+    {
+        /* code */
+        if(line[i] != ' '){ 
+             output = line[i];
+            break;
+
+        }else{
+        }
+    }
+    return output;
+    
 }
 void logic::findVariables(){
     log(info, "sanning file ...");
