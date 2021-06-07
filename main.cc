@@ -102,7 +102,7 @@ class files : private logic {
 int main(){
 
     // ------------
-    logic.set_lib();
+
     utils.getLocalFiles();
     files.readFiletoString();
     utils.getNumberOfCoppies(); 
@@ -124,9 +124,9 @@ int main(){
 //-------core-----------
 void logic::set_lib(){
     string keywords[100] ={"int","string", "long", "double"}; //were to complete this list 
-    char special_chars [25] = {'=', '&', '*','[', ']', '{', '}',  '(', ')','!', '@', '$', '%', '^','_','+', '-', '~', '`', ':', '\'', '"',  '|', ',','?'};
+    char special_chars [28] = {'=', '&', '*','[', ']', '{', '}',  '(', ')',';','<', '>','!', '@', '$', '%', '^','_','+', '-', '~', '`', ':', '\'', '"',  '|', ',','?'};
 
-    char excluded_chars[6] = { '#','/','.', '<', '>', '\\'};
+    char excluded_chars[4] = { '#','/','.',  '\\'};
     lib.special_chars = new  (nothrow)char(25);
     lib.excluded_chars = excluded_chars;
     if(!lib.special_chars){
@@ -142,12 +142,11 @@ void utils::getLocalFiles(){
     string path = "./";  //the path is set to current directory
     int i,maxx = 0,count = 0;
 
-    cout<<"Welcome, please select the file you want to dub"<<endl;
+    cout <<"Welcome, please select the file you want to dub"<<endl;
 
     for(auto nn : fs::directory_iterator(path)){  //this gets the number of files in the dir and stores it to max
          maxx +=1;
      }
-     cout<<lib.special_chars;
 
 
     filearr = new (nothrow) string[maxx+1]; // creates a new array with the size of the dir
@@ -186,20 +185,19 @@ void files::readFiletoString(){
     ifstream thefile(code.name);
     if(thefile.is_open()){
         log(success, "file loaded successfully");
+        log(info, "setting up labrary");
+        set_lib();
         log(info, "attepting to read file");
         while(! thefile.eof()){
             getline(thefile, temp_file_dump);
-            string news = "int arr[5] =    {1,2,3,4,5};";
-            // if(is_in(temp_file_dump[0], lib.excluded_chars)){
-            //     line = temp_file_dump;
-            // }else{
-            line_spacer(news);
-           cout<<"**********************"<<news<<endl;
-            // cout<<temp_file_dump<<endl;
-            // }
-            code.content += temp_file_dump+"\n";
 
-            //wait
+            if(is_in(temp_file_dump[0], lib.excluded_chars)){
+
+            }else{
+            line_spacer(temp_file_dump);
+            }
+
+            code.content += temp_file_dump+"\n";
         }
         log(success, "file read succesfully");
         cout<<code.content;
@@ -249,7 +247,6 @@ void logic::findVariables(){
 }
 void logic::line_spacer(string& line){
 
-       cout<<lib.special_chars;
     for (int i = 0; i <line.length(); i++)
     {
         if( line[i] == ' ' && line[i+1] == ' ' ){
