@@ -28,7 +28,6 @@ typedef long int nat;
 enum log_t {error,check, success, info};
 //---------------------------------
 
-
 //---------this is the data structure of the code  named code-----------
 struct code 
 {
@@ -37,6 +36,8 @@ struct code
     string content; //contents of the file
     int coppies; //number of coppies
     cnt size;  //size of file
+    string word_list[10000][500]; // keeeps all the worlds
+    int max_line;
     
     struct{ // this contains information ablut the variables
         string* name; //names of vaiables wouldd be containedd here
@@ -44,7 +45,6 @@ struct code
         string* catched; // this would store all the generated varables
 
     }var;
-
 }code;
 
 struct lib
@@ -85,6 +85,8 @@ class logic :public utils{
 
         void  line_spacer(string& line);// makes sure each line is well spaced
 
+        void split_line(string line); //splits the line to an array of words 
+
         char get_first_char(string line); //returns the first character in a line, ignoring any whitespace
 
         string autoSuggestVars (string var); // suggest a suitable name for the varibvle and returns it, and catcches it to prevent repetation
@@ -104,7 +106,7 @@ class files : private logic {
 int main(){
 
     // ------------
-
+// logic.split_line("david is a boy");
     utils.getLocalFiles();
     files.readFiletoString();
     utils.getNumberOfCoppies(); 
@@ -189,6 +191,7 @@ void files::readFiletoString(){
     if(thefile.is_open()){
         log(success, "file loaded successfully");
         log(info, "setting up labrary");
+        code.max_line =0;
         set_lib();
         log(info, "attepting to read file");
         while(! thefile.eof()){
@@ -201,10 +204,21 @@ void files::readFiletoString(){
 
             line_spacer(temp_file_dump);
             }
+            code.max_line += 1;
+            log(info, "uploading line to buff array");
+            split_line(temp_file_dump);
             code.content += temp_file_dump+"\n";
         }
         log(success, "file read succesfully");
-        cout<<code.content;
+        for(int i =0; i<code.max_line; i++){
+            for(auto a: code.word_list[i]){
+                if(a != ""){
+                cout<<a<<" ";
+                }
+            }
+            cout<<endl;
+        }
+        // cout<<code.word_list;
 
     }else ///error handling 
     {
@@ -243,6 +257,50 @@ void utils::getNumberOfCoppies(){
         }
     }
 
+}
+void logic::split_line(string line){
+    {
+    // string word;
+    // int count = 0;
+    // istringstream ss(line);
+    // while (ss>>word)
+    // {
+    //     count +=1;
+    // }
+    // string arr[count];
+    // code.word_list = arr;  
+    // int i = 0;
+    // istringstream s(line);
+    // while(s>>word){
+    //     // cout<<word;
+    //     code.word_list[i] =word;
+    //     i+= 1;
+
+    // }                                                                                    
+    // // code.word_list[0] = "qwe";
+    // // code.word_list[4] = "david";
+    // // string d[6] = {"sfdsf", "ssdf"};
+    // // cout<<ss;
+    
+    // cout<<code.word_list[0]<<endl<<code.word_list[1]<<endl;
+    }
+    string buff; 
+    if(is_in(get_first_char(line), lib.excluded_chars)){
+        code.word_list[code.max_line][0] = line;
+    }else{
+        for(auto i =0; i<line.length(); i++){
+            if(line[i]  != ' '){
+                buff += line[i];
+            }else if(line[i] == ' ' && buff.length()>0){
+                code.word_list[code.max_line][i] = buff;
+                buff.clear();
+            }else{
+                buff.clear();
+            }
+
+
+        }
+    }
 }
 char logic::get_first_char(string line){
 
