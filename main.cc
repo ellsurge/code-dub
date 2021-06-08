@@ -52,6 +52,7 @@ struct lib
 {
     char excluded_chars[10];
     char special_chars[100];
+    char num_chars[10];
     string keywords[100];
     string excluded_keywords[10];
 
@@ -76,7 +77,7 @@ class utils{
         
         bool is_in(char niddle, char* haystack);
         bool is_in(string niddle, string* haystack, int size);
-        bool is_in(string niddle, char* haystack);
+        bool is_in(string niddle, char* haystack, int size);
 
         void copy_arr(string* arr1, string *arr2, int size);
         void copy_arr(char* arr1, char *arr2, int size);
@@ -136,20 +137,18 @@ int main(){
 
 //-------core-----------
 void logic::set_lib(){
-    string keywords[] ={"int","string", "long", "double", "namespace", "using", "std", "main"}; //were to complete this list 
+    string keywords[] ={"int","string", "long", "double", "namespace", "using", "std", "if","main", "for", "switch", "while", "break", "continue", "cout", "cin", "endl", "goto","true", "false" "sizeof", "else", "auto", "try", "goto", "xor", "stringstream"}; //were to complete this list 
     char special_chars [] = {'=', '&', '*','[', ']', '{', '}',  '(', ')',';','<', '>','!', '@', '$', '%', '^','_','+', '-', '~', '`', ':', '\'', '"',  '|', ',','?'};
-
+    char num_chars[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
     char excluded_chars[] = { '#','/','.','\\'};
     string var_keywords[] = {"class","private", "public", "void", "protected", "struct"};
-    // string excluded_keywords[] = {"using"};
 
     copy_arr(excluded_chars, lib.excluded_chars, sizeof(excluded_chars));
+    copy_arr(num_chars, lib.num_chars, sizeof(num_chars));
     copy_arr(special_chars, lib.special_chars, sizeof(special_chars));
-    // cout<<"$$$$--"<<lib.excluded_chars[0];
     copy_arr(var_keywords,lib.excluded_keywords, sizeof(var_keywords)/sizeof(var_keywords[0]));
 
     copy_arr(keywords, lib.keywords,sizeof(keywords)/sizeof(keywords[0]) );
-    // copy_arr(excluded_keywords, lib.excluded_keywords, sizeof(excluded_keywords)/sizeof(excluded_chars[0]));
     
 
 }
@@ -315,11 +314,11 @@ void logic::findVariables(){
         // cout<<code.max_line;
         
         for(int i=0; i<sizeof(code.word_list[cl])/sizeof(code.word_list[cl][0]); i++){
-            if(is_in(code.word_list[cl][i], lib.keywords, sizeof(code.word_list[cl][i])/sizeof(code.word_list[cl][i][0])) || is_in(code.word_list[cl][i], lib.excluded_chars) || is_in(code.word_list[cl][i], lib.excluded_keywords, sizeof(code.word_list[cl][i])/sizeof(code.word_list[cl][i][0])) || is_in(code.word_list[cl][i], lib.special_chars)){
+            if(is_in(code.word_list[cl][i], lib.keywords, sizeof(lib.keywords)/sizeof(lib.keywords[0])) || is_in(code.word_list[cl][i], lib.excluded_chars, sizeof(lib.excluded_chars)/sizeof(lib.excluded_chars[0])) || is_in(code.word_list[cl][i], lib.excluded_keywords, sizeof(lib.excluded_keywords)/sizeof(lib.excluded_keywords[0])) || is_in(code.word_list[cl][i], lib.special_chars,  sizeof(lib.special_chars)/sizeof(lib.special_chars[0]))){
                 
             }else{
                 if(is_in(code.word_list[cl][cw-1], lib.excluded_keywords,sizeof(code.word_list[cl][cw-1])/sizeof(code.word_list[cl][cw-1][0])) || code.word_list[cl][cw+1] == "="){
-                    if(!is_in(code.word_list[cl][i],code.var.name, sizeof(code.word_list[cl][i])/sizeof(code.word_list[cl][i][0]))){// setup code.var.name
+                    if(!is_in(code.word_list[cl][i],code.var.name,  sizeof(code.var.name)/sizeof(code.var.name[0])) && !is_in(code.word_list[cl][i],lib.num_chars,  sizeof(lib.num_chars)/sizeof(lib.num_chars[0]))){// setup code.var.name
                         code.var.name[code.var.max_var+1] = code.word_list[cl][i];
                         code.var.location[code.var.max_var+1][0][0] = cl;
                         code.var.location[code.var.max_var+1][0][1] = cw;
@@ -427,11 +426,11 @@ bool utils::is_in(string niddle, string* haystack, int size){
     }
     return init; 
 }
-bool utils::is_in(string niddle, char* haystack){
+bool utils::is_in(string niddle, char* haystack, int size){
     bool init;
 
-    for(; *haystack !=0; haystack++){
-        if(logic.get_first_char(niddle) == *haystack ){
+    for(int i=0; i<size; i++){
+        if(logic.get_first_char(niddle) == haystack[i] ){
             init = true;
             break;
         }else{
@@ -443,6 +442,22 @@ bool utils::is_in(string niddle, char* haystack){
     }
     return init; 
 }
+// bool utils::is_in(string niddle, char* haystack){
+//     bool init;
+
+//     for(; *haystack !=0; haystack++){
+//         if(logic.get_first_char(niddle) == *haystack ){
+//             init = true;
+//             break;
+//         }else{
+//             init =  false;
+//             continue;
+//         }
+//     cout<<"(((((((((((((--here"<<endl;
+
+//     }
+//     return init; 
+// }
 void utils::copy_arr(string *arr1, string *arr2, int size){
     int count =0;
     for(int i=0; i<size; i++){

@@ -2,10 +2,14 @@
 using namespace std;
 
 int main(){
+
     int arr[5]= {1,2    ,3,4,5};
+    string jeff, andy;
+    jeff = "david";
+    andy =jeff;
     int *ap  = arr;
-    for (; *ap !=0; ++ap){
-        cout <<* ap<<endl ;
+    for (; *ap !=0; ++ap){ //this is a comment
+        cout <<* ap<<endl<<* ap<<endl <<* ap<<endl<<* ap<<endl<<* ap<<endl<<* ap<<endl<<* ap<<endl<<* ap<<endl;
 
     }
     // cout<<ap<<endl;
